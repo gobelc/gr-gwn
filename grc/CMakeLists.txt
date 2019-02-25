@@ -19,5 +19,7 @@
 install(FILES
     gwncppvgb_message_timer_example.xml
     gwncppvgb_fsm_test.xml
-    gwncppvgb_fsmblk.xml DESTINATION share/gnuradio/grc/blocks
+    gwncppvgb_fsmblk.xml
+    gwncppvgb_gwnmsg_source.xml
+    gwncppvgb_gwnmsg_sink.xml DESTINATION share/gnuradio/grc/blocks
 )

@@ -47,3 +47,5 @@ GR_ADD_TEST(qa_message_passer ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/q
 GR_ADD_TEST(qa_message_passer ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/qa_message_passer.py)
 GR_ADD_TEST(qa_message_timer_example ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/qa_message_timer_example.py)
 GR_ADD_TEST(qa_fsm_test ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/qa_fsm_test.py)
+GR_ADD_TEST(qa_gwnmsg_source ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/qa_gwnmsg_source.py)
+GR_ADD_TEST(qa_gwnmsg_sink ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/qa_gwnmsg_sink.py)

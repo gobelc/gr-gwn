@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<block>
+  <name>gwnmsg_source</name>
+  <key>gwncppvgb_gwnmsg_source</key>
+  <category>[gwncppvgb]</category>
+  <import>import gwncppvgb</import>
+  <make>gwncppvgb.gwnmsg_source($interval, $msg)</make>
+  <!-- Make one 'param' node for every Parameter you want settable from the GUI.
+       Sub-nodes:
+       * name
+       * key (makes the value accessible as $keyname, e.g. in the make node)
+       * type -->
+  <param>
+    <name>Interval (ms)</name>
+    <key>interval</key>
+    <type>float</type>
+  </param>
+
+  <param>
+    <name>Message</name>
+    <key>msg</key>
+    <type>string</type>
+  </param>
+
+  <!-- Make one 'sink' node per input. Sub-nodes:
+       * name (an identifier for the GUI)
+       * type
+       * vlen
+       * optional (set to 1 for optional inputs) -->
+  <!-- Make one 'source' node per output. Sub-nodes:
+       * name (an identifier for the GUI)
+       * type
+       * vlen
+       * optional (set to 1 for optional inputs) -->
+  <source>
+    <name>out_port_0</name>
+    <type>message</type>
+  </source>
+</block>

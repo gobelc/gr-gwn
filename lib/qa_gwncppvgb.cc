@@ -29,6 +29,8 @@
 
 
 #include "qa_message_timer_example.h"
+#include "qa_gwnmsg_source.h"
+#include "qa_gwnmsg_sink.h"
 
 CppUnit::TestSuite *
 qa_gwncppvgb::suite()
@@ -36,6 +38,8 @@ qa_gwncppvgb::suite()
   CppUnit::TestSuite *s = new CppUnit::TestSuite("gwncppvgb");
 
   s->addTest(gr::gwncppvgb::qa_message_timer_example::suite());
+  s->addTest(gr::gwncppvgb::qa_gwnmsg_source::suite());
+  s->addTest(gr::gwncppvgb::qa_gwnmsg_sink::suite());
 
   return s;
 }
