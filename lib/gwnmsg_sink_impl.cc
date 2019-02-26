@@ -55,20 +55,8 @@ namespace gr {
     gwnmsg_sink_impl::added_init() 
     {
     
-      d_debug = true;
-      //d_debug = true;
+      d_debug = false;
 
-      // set timers message, period, etc
-      //d_timers[0]->d_count = 9999;
-      //d_timers[0]->d_period_ms = 100;
-      //d_timers[0]->d_pmt_msg = pmt::mp("Timer 0 message");
-      //d_timers[1]->d_count = d_count_2;
-      //d_timers[1]->d_period_ms = d_period_2;
-      //d_timers[1]->d_pmt_msg = pmt::mp(d_msg_2);
-
-      // start timers
-      //d_timers[0]->start_timer();
-      //d_timers[1]->start_timer();
     }
 
 
@@ -94,12 +82,17 @@ namespace gr {
         if ( type == "Timer" )  
         {           // GWN timer message
           // actions on GWN timer message
+          
+          std::cout << "    process_data, TIMER msg from " <<
+            d_port << std::endl << "   ";
+          std::cout << "    type: " << type << ", subtype: " <<
+            subtype << ", seq_nr: " << seq_nr << std::endl;
+          pmt::print(pmt_msg);
+          
           if (d_debug) {
-            std::cout << "    process_data, TIMER msg from " <<
-              d_port << std::endl << "   ";
-            std::cout << "    type: " << type << ", subtype: " <<
-              subtype << ", seq_nr: " << seq_nr << std::endl;
-            pmt::print(pmt_msg);
+
+            // debug stuff
+            
           }
         } else {    // GWN non-timer message
           // actions on GWN non-timer message
@@ -114,10 +107,6 @@ namespace gr {
 
       }  // end message is GWN or GR
 
-      // emit messages on output port
-      std::cout << "pasando por aca..." << std::endl;
-      //pmt::pmt_t pmt_port = pmt::string_to_symbol("out_port_0");
-      //post_message(pmt_port, pmt_msg);
     }
 
 
@@ -280,9 +269,6 @@ namespace gr {
     /* Handles messages received on message input ports. */
     void gwnmsg_sink_impl::handle_msg (pmt::pmt_t pmt_msg)
     {
-      std::cout << "...pasando por handle msg: \n"; // quitar debug
-      std::string in_msg = pmt::symbol_to_string(pmt_msg);
-      std::cout << "...pasando por handle msg2: \n"; // quitar debug
       if (d_debug) { 
         std::cout << "...handle input msg: \n";
         pmt::print(pmt_msg);
