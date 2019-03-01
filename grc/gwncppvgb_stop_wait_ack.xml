@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<block>
+  <name>stop_wait_ack</name>
+  <key>gwncppvgb_stop_wait_ack</key>
+  <category>[gwncppvgb]</category>
+  <import>import gwncppvgb</import>
+  <make>gwncppvgb.stop_wait_ack($ack_nickname)</make>
+  <!-- Make one 'param' node for every Parameter you want settable from the GUI.
+       Sub-nodes:
+       * name
+       * key (makes the value accessible as $keyname, e.g. in the make node)
+       * type -->
+  <param>
+    <name>ACK nickname</name>
+    <key>ack_nickname</key>
+    <type>string</type>
+  </param>
+
+  <!-- Make one 'sink' node per input. Sub-nodes:
+       * name (an identifier for the GUI)
+       * type
+       * vlen
+       * optional (set to 1 for optional inputs) -->
+  <sink>
+    <name>in_port_0</name>
+    <type>message</type>
+  </sink>
+
+  <!-- Make one 'source' node per output. Sub-nodes:
+       * name (an identifier for the GUI)
+       * type
+       * vlen
+       * optional (set to 1 for optional inputs) -->
+  <source>
+    <name>out_port_0</name>
+    <type>message</type>
+  </source>
+  <source>
+    <name>out_port_1</name>
+    <type>message</type>
+  </source>
+</block>

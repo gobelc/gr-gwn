@@ -27,5 +27,6 @@ install(FILES
     fsmblk.h
     gwnmsg_source.h
     gwnmsg_sink.h
-    virtual_channel.h DESTINATION include/gwncppvgb
+    virtual_channel.h
+    stop_wait_ack.h DESTINATION include/gwncppvgb
 )

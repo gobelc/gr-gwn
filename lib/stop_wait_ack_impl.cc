@@ -23,7 +23,7 @@
 #endif
 
 #include <gnuradio/io_signature.h>
-#include "gwnmsg_sink_impl.h"
+#include "stop_wait_ack_impl.h"
 
 /* GWN inclusions */
 #include <iostream>  // for string support
@@ -52,7 +52,7 @@ namespace gr {
 
     /* Additional initialization, REWRITE as desired. */
     void
-    gwnmsg_sink_impl::added_init() 
+    stop_wait_ack_impl::added_init() 
     {
     
       d_debug = false;
@@ -63,10 +63,11 @@ namespace gr {
 
     /* Timer and input messages processing, REWRITE as desired. */
     void
-    gwnmsg_sink_impl::process_data(
+    stop_wait_ack_impl::process_data(
       std::string port, pmt::pmt_t pmt_msg)
     {
       std::string d_port = port;
+      pmt::pmt_t pmt_ack_dict = pmt::make_dict();
 
       // verify if message is dictionary (GWN) or other (GR)
       if ( pmt::is_dict(pmt_msg) )
@@ -79,22 +80,27 @@ namespace gr {
         int seq_nr = pmt::to_long (pmt::dict_ref(
           pmt_msg, pmt::intern("seq_nr"), pmt::PMT_NIL)); 
         
-        std::cout << "    process_data, TIMER msg from " <<
-          d_port << std::endl << "   ";
-        std::cout << "    type: " << type << ", subtype: " <<
-          subtype << ", seq_nr: " << seq_nr << std::endl;
-        pmt::print(pmt_msg);
+
+        // make ACK message
+      
+        pmt_ack_dict = pmt::dict_add(pmt_ack_dict, 
+          pmt::intern("type"), pmt::intern("ACK")); 
+        pmt_ack_dict = pmt::dict_add(pmt_ack_dict, 
+          pmt::intern("subtype"), pmt::intern(d_ack_nickname));
+        pmt_ack_dict = pmt::dict_add(pmt_ack_dict, 
+          pmt::intern("seq_nr"), pmt::from_long(seq_nr));
+        pmt_ack_dict = pmt::dict_add(pmt_ack_dict, 
+          pmt::intern("message"), pmt::intern("Message in here?!?!"));
 
         if ( type == "Timer" )  
         {           // GWN timer message
           // actions on GWN timer message
-          
-
-          
           if (d_debug) {
-
-            // debug stuff
-            
+            std::cout << "    process_data, TIMER msg from " <<
+              d_port << std::endl << "   ";
+            std::cout << "    type: " << type << ", subtype: " <<
+              subtype << ", seq_nr: " << seq_nr << std::endl;
+            pmt::print(pmt_msg);
           }
         } else {    // GWN non-timer message
           // actions on GWN non-timer message
@@ -109,6 +115,13 @@ namespace gr {
 
       }  // end message is GWN or GR
 
+      // emit messages on output port 0
+      pmt::pmt_t pmt_port_0 = pmt::string_to_symbol("out_port_0");
+      post_message(pmt_port_0, pmt_msg);
+
+      // emit ACK message on output port 1 
+      pmt::pmt_t pmt_port_1 = pmt::string_to_symbol("out_port_1");
+      post_message(pmt_port_1, pmt_ack_dict);
     }
 
 
@@ -121,7 +134,7 @@ namespace gr {
 
 
     /* GWNPort */
-    gwnmsg_sink_impl::GWNPort::GWNPort() {
+    stop_wait_ack_impl::GWNPort::GWNPort() {
       d_port = "";      // null port name
       d_port_nr = -1;   // first working port will be 0
       d_debug = false;
@@ -130,7 +143,7 @@ namespace gr {
         << std::endl; }
     }  // end GWNPort
 
-    std::string gwnmsg_sink_impl::GWNPort::__str__() {
+    std::string stop_wait_ack_impl::GWNPort::__str__() {
       std::string ss = "GWNPort name: " + d_port + 
         ", number: " + std::to_string(d_port_nr) + 
         ", in block: " + d_block->d_name + "\n";
@@ -139,8 +152,8 @@ namespace gr {
 
 
     /* GWNOutPort */
-    gwnmsg_sink_impl::GWNOutPort::
-        GWNOutPort(gwnmsg_sink_impl * p_block, 
+    stop_wait_ack_impl::GWNOutPort::
+        GWNOutPort(stop_wait_ack_impl * p_block, 
         std::string p_port, int p_port_nr) : GWNPort()
    {
       d_block = p_block;
@@ -153,8 +166,8 @@ namespace gr {
 
 
     /* GWNInPort */
-    gwnmsg_sink_impl::GWNInPort::
-        GWNInPort(gwnmsg_sink_impl * p_block, 
+    stop_wait_ack_impl::GWNInPort::
+        GWNInPort(stop_wait_ack_impl * p_block, 
         std::string p_port, int p_port_nr) : GWNPort()
     {
       d_block = p_block;
@@ -168,8 +181,8 @@ namespace gr {
 
 
     /* GWNTimer constructor */
-    gwnmsg_sink_impl::GWNTimer::GWNTimer(
-      gwnmsg_sink_impl * block, std::string id_timer, 
+    stop_wait_ack_impl::GWNTimer::GWNTimer(
+      stop_wait_ack_impl * block, std::string id_timer, 
       pmt::pmt_t pmt_msg, int count, float period_ms) 
       : d_block(block), d_id_timer(id_timer),
         d_pmt_msg(pmt_msg), d_count(count),
@@ -184,12 +197,12 @@ namespace gr {
 
     /* GWNTimer, creates thread, timer starts immediately */
     void
-    gwnmsg_sink_impl::GWNTimer::start_timer()
+    stop_wait_ack_impl::GWNTimer::start_timer()
     {
     
       d_thread = boost::shared_ptr<gr::thread::thread>
         (new gr::thread::thread(boost::bind (
-            &gwnmsg_sink_impl::GWNTimer::run_timer, this))
+            &stop_wait_ack_impl::GWNTimer::run_timer, this))
         );
       if (d_debug) {
         std::cout << "    === TIMER STARTED: " << d_id_timer <<
@@ -201,7 +214,7 @@ namespace gr {
 
     /* GWNTimer, runs timer, sleeps and sends message */
     void
-    gwnmsg_sink_impl::GWNTimer::run_timer()
+    stop_wait_ack_impl::GWNTimer::run_timer()
     {
       boost::mutex d_mutex;
 
@@ -244,7 +257,7 @@ namespace gr {
 
     /* Handles message sent by timer threads */
     void
-    gwnmsg_sink_impl::handle_timer_msg(pmt::pmt_t pmt_msg) 
+    stop_wait_ack_impl::handle_timer_msg(pmt::pmt_t pmt_msg) 
     {
       std::string timer_id = pmt::symbol_to_string( pmt::dict_ref (
         pmt_msg, pmt::intern("subtype"), pmt::PMT_NIL));
@@ -258,18 +271,18 @@ namespace gr {
 
 
 
-    /* *** GWN gwnmsg_sink *** */
+    /* *** GWN stop_wait_ack *** */
 
-    /* GWN gwnmsg_sink attributes and functions */
+    /* GWN stop_wait_ack attributes and functions */
 
-    /*std::string gwnmsg_sink_impl::__str__() {
+    /*std::string stop_wait_ack_impl::__str__() {
       std::string ss = "__str__() Block name: " + this->d_name; 
       return ss;
     }*/
 
 
     /* Handles messages received on message input ports. */
-    void gwnmsg_sink_impl::handle_msg (pmt::pmt_t pmt_msg)
+    void stop_wait_ack_impl::handle_msg (pmt::pmt_t pmt_msg)
     {
       if (d_debug) { 
         std::cout << "...handle input msg: \n";
@@ -286,7 +299,7 @@ namespace gr {
 
 
     /* post_message in PMT formatted port */
-    void gwnmsg_sink_impl::post_message(pmt::pmt_t pmt_port,
+    void stop_wait_ack_impl::post_message(pmt::pmt_t pmt_port,
         pmt::pmt_t pmt_msg_send)
     {
       if (d_debug) {
@@ -303,7 +316,7 @@ namespace gr {
 
 
     /* post_message in string formatted port */
-    void gwnmsg_sink_impl::post_message(std::string port,
+    void stop_wait_ack_impl::post_message(std::string port,
         pmt::pmt_t pmt_msg)
     {
       pmt::pmt_t pmt_port = pmt::intern(port); 
@@ -313,45 +326,45 @@ namespace gr {
 
 
     /* GNU Radio defaults for block construction */
-    gwnmsg_sink::sptr
-    //gwnmsg_sink::make(std::string message, int counter)
-    gwnmsg_sink::make(  )
+    stop_wait_ack::sptr
+    //stop_wait_ack::make(std::string message, int counter)
+    stop_wait_ack::make( std::string ack_nickname )
          //std::string msg_1, float period_1, int count_1,
         //std::string msg_2, float period_2, int count_2 ) 
     {
       return gnuradio::get_initial_sptr
-        (new gwnmsg_sink_impl () ); 
+        (new stop_wait_ack_impl (ack_nickname) ); 
           //msg_1, period_1, count_1, msg_2, period_2, count_2) );  
     }  // end make
 
 
 
-    /* gwnmsg_sink: the private constructor */
-    //gwnmsg_sink_impl::gwnmsg_sink_impl(std::string message, int counter)
-    gwnmsg_sink_impl::gwnmsg_sink_impl 
-      (  ) 
-      : gr::block("gwnmsg_sink",
+    /* stop_wait_ack: the private constructor */
+    //stop_wait_ack_impl::stop_wait_ack_impl(std::string message, int counter)
+    stop_wait_ack_impl::stop_wait_ack_impl 
+      ( std::string ack_nickname ) 
+      : gr::block("stop_wait_ack",
               gr::io_signature::make(0, 0, sizeof(int)),
               gr::io_signature::make(0, 0, sizeof(int)) ) //,
       // GWN TAG user arguments constructor init
-      
+      , d_ack_nickname(ack_nickname)
 
     {
       // GWN block name, ports and timers as block attributes
-      d_name = "gwnmsg_sink";
+      d_name = "stop_wait_ack";
       d_number_in = 1;
-      d_number_out = 0;
+      d_number_out = 2;
       d_number_timers = 0;
 
       d_debug = false; 
 
       if (d_debug) {
-        std::cout << "gwnmsg_sink, constructor, name " << 
+        std::cout << "stop_wait_ack, constructor, name " << 
           d_name << ", number_in " << d_number_in << 
           ", number_out " << d_number_out << std::endl;
       }
 
-      // gwnmsg_sink, create out ports
+      // stop_wait_ack, create out ports
       int i;
       d_ports_out.resize(d_number_out);
       std::string out_port;
@@ -366,14 +379,14 @@ namespace gr {
         message_port_register_out(pmt_out_port); 
       }  // end for
       if (d_debug) {    // print items in vector of out ports
-        std::cout << "=== gwnmsg_sink, out ports:" << std::endl;
+        std::cout << "=== stop_wait_ack, out ports:" << std::endl;
         for ( i=0; i < d_number_out; i++) {
           std::cout << "  out port " << i << 
             ": " << d_ports_out[i]->__str__(); // << std::endl; 
         }
       }
 
-      // gwnmsg_sink, create in ports
+      // stop_wait_ack, create in ports
       //int i;                  // already declared
       d_ports_in.resize(d_number_in);
       std::string in_port;  
@@ -388,10 +401,10 @@ namespace gr {
 
         message_port_register_in(pmt_in_port);
         set_msg_handler(pmt_in_port,
-          boost::bind(&gwnmsg_sink_impl::handle_msg, this, _1));
+          boost::bind(&stop_wait_ack_impl::handle_msg, this, _1));
       }  // end for
       if (d_debug) {      // print items in vector of in ports
-        std::cout << "=== gwnmsg_sink, in ports:" << std::endl;
+        std::cout << "=== stop_wait_ack, in ports:" << std::endl;
         for ( i=0; i < d_number_in; i++) {
           std::cout << "  in port " << i << 
             ": " << d_ports_in[i]->__str__(); // << std::endl; 
@@ -402,7 +415,7 @@ namespace gr {
       // register the timer port
       message_port_register_in(pmt::mp("timer_port"));
       set_msg_handler(pmt::mp("timer_port"),
-        boost::bind(&gwnmsg_sink_impl::handle_timer_msg, 
+        boost::bind(&stop_wait_ack_impl::handle_timer_msg, 
         this, _1));
       // create timers
       d_timers.resize(d_number_timers);
@@ -418,14 +431,14 @@ namespace gr {
 
 
       // additional initialization
-      //gwnmsg_sink_impl::added_init();
+      //stop_wait_ack_impl::added_init();
       added_init();
 
     }  // end constructor
 
 
-    /* gwnmsg_sink: our virtual destructor */
-    gwnmsg_sink_impl::~gwnmsg_sink_impl()
+    /* stop_wait_ack: our virtual destructor */
+    stop_wait_ack_impl::~stop_wait_ack_impl()
     { }
 
 

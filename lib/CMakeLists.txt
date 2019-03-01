@@ -30,7 +30,8 @@ list(APPEND gwncppvgb_sources
     fsmblk.cc
     gwnmsg_source_impl.cc
     gwnmsg_sink_impl.cc
-    virtual_channel_impl.cc )
+    virtual_channel_impl.cc
+    stop_wait_ack_impl.cc )
 
 set(gwncppvgb_sources "${gwncppvgb_sources}" PARENT_SCOPE)
 if(NOT gwncppvgb_sources)
@@ -63,6 +64,7 @@ include_directories(${CPPUNIT_INCLUDE_DIRS})
 list(APPEND test_gwncppvgb_sources
     ${CMAKE_CURRENT_SOURCE_DIR}/test_gwncppvgb.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/qa_gwncppvgb.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/qa_stop_wait_ack.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/qa_virtual_channel.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/qa_gwnmsg_sink.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/qa_gwnmsg_source.cc
