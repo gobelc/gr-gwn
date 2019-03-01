@@ -26,5 +26,6 @@ install(FILES
     fsm_test.h
     fsmblk.h
     gwnmsg_source.h
-    gwnmsg_sink.h DESTINATION include/gwncppvgb
+    gwnmsg_sink.h
+    virtual_channel.h DESTINATION include/gwncppvgb
 )

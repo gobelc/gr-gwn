@@ -21,5 +21,6 @@ install(FILES
     gwncppvgb_fsm_test.xml
     gwncppvgb_fsmblk.xml
     gwncppvgb_gwnmsg_source.xml
-    gwncppvgb_gwnmsg_sink.xml DESTINATION share/gnuradio/grc/blocks
+    gwncppvgb_gwnmsg_sink.xml
+    gwncppvgb_virtual_channel.xml DESTINATION share/gnuradio/grc/blocks
 )

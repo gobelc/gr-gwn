@@ -13,6 +13,7 @@
 #include "gwncppvgb/fsmblk.h"
 #include "gwncppvgb/gwnmsg_source.h"
 #include "gwncppvgb/gwnmsg_sink.h"
+#include "gwncppvgb/virtual_channel.h"
 %}
 
 
@@ -26,3 +27,5 @@ GR_SWIG_BLOCK_MAGIC2(gwncppvgb, fsm_test);
 GR_SWIG_BLOCK_MAGIC2(gwncppvgb, gwnmsg_source);
 %include "gwncppvgb/gwnmsg_sink.h"
 GR_SWIG_BLOCK_MAGIC2(gwncppvgb, gwnmsg_sink);
+%include "gwncppvgb/virtual_channel.h"
+GR_SWIG_BLOCK_MAGIC2(gwncppvgb, virtual_channel);
