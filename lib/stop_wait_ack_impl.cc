@@ -90,7 +90,7 @@ namespace gr {
         pmt_ack_dict = pmt::dict_add(pmt_ack_dict, 
           pmt::intern("seq_nr"), pmt::from_long(seq_nr));
         pmt_ack_dict = pmt::dict_add(pmt_ack_dict, 
-          pmt::intern("message"), pmt::intern("Message in here?!?!"));
+          pmt::intern("message"), pmt::intern(""));
 
         if ( type == "Timer" )  
         {           // GWN timer message
