@@ -56,19 +56,7 @@ namespace gr {
     {
     
       d_debug = false;
-      //d_debug = true;
-
-      // set timers message, period, etc
-      //d_timers[0]->d_count = 0;
-      //d_timers[0]->d_period_ms = 100;
-      //d_timers[0]->d_pmt_msg = pmt::mp("Timer 0 message");
-      //d_timers[1]->d_count = d_count_2;
-      //d_timers[1]->d_period_ms = d_period_2;
-      //d_timers[1]->d_pmt_msg = pmt::mp(d_msg_2);
-
-      // start timers
-      // d_timers[0]->start_timer();
-      //d_timers[1]->start_timer();
+      
     }
 
 
@@ -123,8 +111,9 @@ namespace gr {
       sorted = ((double) rand() / (RAND_MAX));
 
       if (d_prob_loss <= sorted) {
-        std::cout << sorted << "Packet loss" << std::endl;
         post_message(pmt_port, pmt_msg);
+      } else if (d_debug) {
+        std::cout << "Packet lossed" << std::endl;
       }
         
     }
