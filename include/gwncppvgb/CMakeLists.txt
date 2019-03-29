@@ -28,5 +28,7 @@ install(FILES
     gwnmsg_source.h
     gwnmsg_sink.h
     virtual_channel.h
-    stop_wait_ack.h DESTINATION include/gwncppvgb
+    stop_wait_ack.h
+    arq_sender.h
+    arq_sender_fsm.h DESTINATION include/gwncppvgb
 )

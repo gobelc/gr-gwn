@@ -19,8 +19,8 @@
  */
 
 
-#ifndef INCLUDED_GWNCPPVGB_GWNBLOCK_DEV_H
-#define INCLUDED_GWNCPPVGB_GWNBLOCK_DEV_H
+#ifndef INCLUDED_GWNCPPVGB_ARQ_SENDER_H
+#define INCLUDED_GWNCPPVGB_ARQ_SENDER_H
 
 #include <gwncppvgb/api.h>
 #include <gnuradio/block.h>
@@ -39,25 +39,25 @@ namespace gr {
      */
 
 
-    class GWNCPPVGB_API gwnblock_dev : virtual public gr::block
+    class GWNCPPVGB_API arq_sender : virtual public gr::block
     {
      public:
-      typedef boost::shared_ptr<gwnblock_dev> sptr;
+      typedef boost::shared_ptr<arq_sender> sptr;
 
       /*!
-       * \brief Return a shared_ptr to a new instance of gwncppvgb::gwnblock_dev.
+       * \brief Return a shared_ptr to a new instance of gwncppvgb::arq_sender.
        *
-       * To avoid accidental use of raw pointers, gwncppvgb::gwnblock_dev's
+       * To avoid accidental use of raw pointers, gwncppvgb::arq_sender's
        * constructor is in a private implementation
-       * class. gwncppvgb::gwnblock_dev::make is the public interface for
+       * class. gwncppvgb::arq_sender::make is the public interface for
        * creating new instances.
        */
-      static sptr make( <GWN TAG user arguments list> );
+      static sptr make(bool debug);
 
     };
 
   } // namespace gwncppvgb
 } // namespace gr
 
-#endif /* INCLUDED_GWNCPPVGB_GWNBLOCK_DEV_H */
+#endif /* INCLUDED_GWNCPPVGB_ARQ_SENDER_H */
 

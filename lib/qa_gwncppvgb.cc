@@ -33,6 +33,8 @@
 #include "qa_gwnmsg_sink.h"
 #include "qa_virtual_channel.h"
 #include "qa_stop_wait_ack.h"
+#include "qa_arq_sender.h"
+#include "qa_arq_sender_fsm.h"
 
 CppUnit::TestSuite *
 qa_gwncppvgb::suite()
@@ -44,6 +46,8 @@ qa_gwncppvgb::suite()
   s->addTest(gr::gwncppvgb::qa_gwnmsg_sink::suite());
   s->addTest(gr::gwncppvgb::qa_virtual_channel::suite());
   s->addTest(gr::gwncppvgb::qa_stop_wait_ack::suite());
+  s->addTest(gr::gwncppvgb::qa_arq_sender::suite());
+  s->addTest(gr::gwncppvgb::qa_arq_sender_fsm::suite());
 
   return s;
 }

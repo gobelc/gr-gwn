@@ -15,6 +15,8 @@
 #include "gwncppvgb/gwnmsg_sink.h"
 #include "gwncppvgb/virtual_channel.h"
 #include "gwncppvgb/stop_wait_ack.h"
+#include "gwncppvgb/arq_sender.h"
+#include "gwncppvgb/arq_sender_fsm.h"
 %}
 
 
@@ -32,3 +34,6 @@ GR_SWIG_BLOCK_MAGIC2(gwncppvgb, gwnmsg_sink);
 GR_SWIG_BLOCK_MAGIC2(gwncppvgb, virtual_channel);
 %include "gwncppvgb/stop_wait_ack.h"
 GR_SWIG_BLOCK_MAGIC2(gwncppvgb, stop_wait_ack);
+%include "gwncppvgb/arq_sender.h"
+GR_SWIG_BLOCK_MAGIC2(gwncppvgb, arq_sender);
+%include "gwncppvgb/arq_sender_fsm.h"

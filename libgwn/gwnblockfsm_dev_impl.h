@@ -18,10 +18,10 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_GWNCPPVGB_GWNBLOCK_DEV_IMPL_H
-#define INCLUDED_GWNCPPVGB_GWNBLOCK_DEV_IMPL_H
+#ifndef INCLUDED_GWNCPPVGB_GWNBLOCKFSM_DEV_IMPL_H
+#define INCLUDED_GWNCPPVGB_GWNBLOCKFSM_DEV_IMPL_H
 
-#include <gwncppvgb/gwnblock_dev.h>
+#include <gwncppvgb/gwnblockfsm_dev.h>
 
 /*  GWN inclusions */
 #include <vector>
@@ -39,8 +39,8 @@ namespace gr {
      */
 
 
-    /* GWN gwnblock_dev, a template block */
-    class gwnblock_dev_impl : public virtual gwnblock_dev
+    /* GWN gwnblockfsm_dev block */
+    class gwnblockfsm_dev_impl : public virtual gwnblockfsm_dev
     {
     private:
 
@@ -52,7 +52,7 @@ namespace gr {
         public:
           GWNPort();
           /** A pointer to the block which contains this port. */ 
-          gwnblock_dev_impl * d_block;
+          gwnblockfsm_dev_impl * d_block;
           /** An identifier of this port. */
           std::string d_port;
           /** A sequential number for this port. */ 
@@ -65,14 +65,14 @@ namespace gr {
       */
       class GWNOutPort: public virtual GWNPort { 
         public:
-          GWNOutPort(gwnblock_dev_impl *, std::string, int);
+          GWNOutPort(gwnblockfsm_dev_impl *, std::string, int);
        };
 
       /** Input message port.
       */
       class GWNInPort: public virtual GWNPort {
         public:
-          GWNInPort(gwnblock_dev_impl *, std::string, int);
+          GWNInPort(gwnblockfsm_dev_impl *, std::string, int);
       }; 
 
 
@@ -113,11 +113,11 @@ namespace gr {
           @param count The number of times to emit the message.
           @param period_ms: Tne period of emission in milliseconds.
           */
-          GWNTimer(gwnblock_dev_impl * block, 
+          GWNTimer(gwnblockfsm_dev_impl * block, 
             std::string id_timer, pmt::pmt_t pmt_msg, 
             int count, float period_ms);
 
-            gwnblock_dev_impl * d_block;
+            gwnblockfsm_dev_impl * d_block;
             std::string d_id_timer; 
             pmt::pmt_t d_pmt_msg;
             int d_count;
@@ -159,10 +159,10 @@ namespace gr {
 
     public:
       /** Constructor. */
-      gwnblock_dev_impl( <GWN TAG user arguments list> );
+      gwnblockfsm_dev_impl(bool debug);
 
       /** Destructor. */
-      ~gwnblock_dev_impl();
+      ~gwnblockfsm_dev_impl();
 
       /** Block name. */
       std::string d_name;
@@ -211,7 +211,7 @@ namespace gr {
 
       This function receives messages from the input ports and from the timer ports. 
       The message received may be any PMT formatted message. If it is a GWN message, it is a dictionary in PMT format, which contains a type, a subtype, and a sequence number, with the optional addition of other entries defined by the user. In this function the actions defined by the programmer are executed.
-      @param port The port identifier on which the message was received.
+      @param port The port identifier on which the message was received, in string format.
       @param pmt_msg The message, in PMT format.
       */
       void process_data(
@@ -221,11 +221,16 @@ namespace gr {
       bool d_debug;
 
       // GWN TAG user arguments declaration
+      int d_sym_len; 
+      int d_sym_counter; 
+
+      // GWN TAG declare pointer attribute to optional FSM block
+      gwncppvgb::gwnfsm_dev * d_fsm;
 
     }; 
 
   } // namespace gwncppvgb
 } // namespace gr
 
-#endif /* INCLUDED_GWNCPPVGB_GWNBLOCK_DEV_IMPL_H */
+#endif /* INCLUDED_GWNCPPVGB_GWNBLOCKFSM_DEV_IMPL_H */
 
